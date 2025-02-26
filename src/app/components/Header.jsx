@@ -1,6 +1,11 @@
+"use server";
+import { getSignInUrl, withAuth } from "@workos-inc/authkit-nextjs";
 import Link from "next/link";
 
-const Header = () => {
+const Header = async () => {
+  const { user } = await withAuth();
+  const signInUrl = await getSignInUrl();
+
   return (
     <header>
       <div className="flex justify-between  ">
@@ -28,9 +33,12 @@ const Header = () => {
           AI Job Board
         </Link>
         <nav className="flex gap-4 items-center *:px-4 *:py-2 *:rounded-md">
-          <Link href="/login" className="bg-gray-200 ">
-            Log In
-          </Link>
+          {!user && (
+            <Link href={signInUrl} className="bg-gray-200 ">
+              Log In
+            </Link>
+          )}
+
           <Link href="/new-listing" className="bg-blue-600 text-white">
             Post Job
           </Link>
